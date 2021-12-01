@@ -4,6 +4,26 @@ import pandas as pd
 
 data = pd.read_csv('./data/books.csv')
 
+rated_books = {}
+books_to_rate = {}
+
+def generate_books_to_rate(data: pd.DataFrame) -> pd.DataFrame:
+    data = data.copy()
+    data.sort_values('average_rating')
+    data = data[data.average_rating.astype(float) > 4]
+    data = data.sample(n=20)
+    data = data[['title', 'image_url', 'book_id']]
+    data['container'] = st.container
+    data['Response'] = None
+    return data
+
+books = generate_books_to_rate(data)
+
+#for i in books.iterrows():
+    #i[1].container
+#à revoir
+
+## add bouton to add random books or generate another sample
 st.sidebar.image(data.image_url[0])
 
 k = st.container()
