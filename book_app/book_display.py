@@ -7,22 +7,32 @@ from typing import (Dict,
                     Callable)
 
 class BookDisplay:
-    def generate_books_to_rate(data: pd.DataFrame, number_of_books: int = 20) -> pd.DataFrame:
+    def generate_books_to_rate(data: pd.DataFrame,number_of_books: int = 20, rstate: int = 44, search: str = None) -> pd.DataFrame:
         data = data.copy()
+        data = data.drop_duplicates(subset=['title'])
+        if str.lower(search) is not None:
+            data = data[data.title.str.lower().str.contains(search)]
         #data.sort_values('average_rating')
 
-        data = data[data.average_rating.astype(float) > 4]
-        data = data.sample(n=number_of_books, random_state=44)
-        data = data[['title', 'image_url', 'book_id']]
+        data = data[data.ratings_count.astype(float) > 100000]
+
+        nb_of_books = data.shape[0]
+
+        if nb_of_books < number_of_books:
+            print(data.shape[0])
+            number_of_books = data.shape[0]
+
+        data = data.sample(n=number_of_books, random_state=rstate, replace=False)
+        data = data[['title', 'image_url', 'book_id', 'average_rating']]
         data['Response'] = None
 
-        return data
+        return data, nb_of_books
 
-    def display_books_to_rate(data: pd.DataFrame):
-        books = {}
+    def display_books_to_rate(data: pd.DataFrame, books: Dict):
         for rows in data.itertuples(index=False):
             with st.container():
-                st.write(f'{rows.title}')
+                st.write(f'_________________')
+                st.write(f'{rows.title}, rating : {rows.average_rating}')
                 st.write(f'_________________')
                 f, s = st.columns(2)
 
@@ -45,5 +55,11 @@ class BookDisplay:
                         """<div style="text-align: center"> ⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
                     if books[f'{rows.title}'] == 5: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
-        st.write(books)
+        st.write(' ')
+        st.write(' ')
+        st.write(' ')
+        st.write(pd.DataFrame(books, index=[0]))
+
+    def refresh_bouton(self):
+        return 0
 
