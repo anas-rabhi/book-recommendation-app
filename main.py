@@ -7,7 +7,39 @@ data = pd.read_csv('./data/books.csv')
 st.sidebar.write(
     "Recommanded movies")
 
-books = BookDisplay.generate_books_to_rate(data, number_of_books= 5)
+if 'number_of_books' not in st.session_state:
+    st.session_state['number_of_books'] = 5
 
-BookDisplay.display_books_to_rate(books)
+if 'random_books' not in st.session_state:
+    st.session_state['random_books'] = 440
 
+if 'rated_books' not in st.session_state:
+    st.session_state['rated_books'] = {}
+
+
+
+
+search = st.text_input('Cherchez votre livre')
+
+
+f, s = st.columns(2)
+
+
+
+
+books_to_display, nb = BookDisplay.generate_books_to_rate(data, number_of_books=st.session_state['number_of_books'], rstate=st.session_state['random_books'], search=search)
+
+
+st.write(f'Nombre de livres disponibles : {nb}')
+st.write(f'Nombre de livres affichés : {st.session_state["number_of_books"]}')
+
+
+BookDisplay.display_books_to_rate(books_to_display, st.session_state['rated_books'])
+
+with f:
+    if st.button('Load more books'):
+        st.session_state['number_of_books'] += 5
+with s:
+    if st.button('Show another sample of books'):
+        st.session_state['random_books'] += 5
+        st.session_state['number_of_books'] = 5
