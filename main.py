@@ -19,7 +19,7 @@ if 'rated_books' not in st.session_state:
 
 
 
-search = st.text_input('Cherchez votre livre')
+search = st.text_input('Rechercher un livre')
 
 
 f, s = st.columns(2)
@@ -32,7 +32,9 @@ books_to_display, nb = BookDisplay.generate_books_to_rate(data, number_of_books=
 
 st.write(f'Nombre de livres disponibles : {nb}')
 st.write(f'Nombre de livres affichés : {st.session_state["number_of_books"]}')
+st.write(f'__________')
 
+st.title(f'Livres à noter ')
 
 BookDisplay.display_books_to_rate(books_to_display, st.session_state['rated_books'])
 
