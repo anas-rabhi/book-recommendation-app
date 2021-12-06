@@ -6,7 +6,12 @@ from typing import (Dict,
                     List,
                     Callable)
 
+similarity = 0
 class BookDisplay:
+    def __init__(self):
+        self._similarity(0)
+
+    @staticmethod
     def generate_books_to_rate(data: pd.DataFrame,number_of_books: int = 20, rstate: int = 44, search: str = None) -> pd.DataFrame:
         data = data.copy()
         data = data.drop_duplicates(subset=['title'])
@@ -28,6 +33,7 @@ class BookDisplay:
 
         return data, nb_of_books
 
+    @staticmethod
     def display_books_to_rate(data: pd.DataFrame, books: Dict):
         for rows in data.itertuples(index=False):
             with st.container():
@@ -60,6 +66,16 @@ class BookDisplay:
         st.write(' ')
         st.write(pd.DataFrame(books, index=[0]))
 
-    def refresh_bouton(self):
+    def refresh_bouton(self): # not sure to put it there
         return 0
 
+
+
+    def _similarity(book_id: str, data: pd.DataFrame):
+        pred = data.copy()
+        i = pred[pred['books_id'] == book_id].index[0]
+        pred['similar'] = similarity[i]
+        #pred = pred[pred.title != books_id]
+        #pred = pred.sort_values(['similar'], ascending=False)
+
+        return 0 #pred[:10]
