@@ -44,3 +44,6 @@ with s:
     if st.button('Show another sample of books'):
         st.session_state['random_books'] += 5
         st.session_state['number_of_books'] = 5
+
+# BookDisplay.recommended_books(st.session_state['rated_books'])
+
