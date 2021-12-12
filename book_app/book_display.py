@@ -6,7 +6,10 @@ from typing import (Dict,
                     List,
                     Callable)
 
-similarity = 0
+
+similarity_matrix = np.load('../data/similarity.npy')
+all_books = pd.read_csv('../data/books.csv')
+
 class BookDisplay:
     def __init__(self):
         self._similarity(0)
@@ -71,11 +74,11 @@ class BookDisplay:
 
 
 
-    def _similarity(book_id: str, data: pd.DataFrame):
-        pred = data.copy()
-        i = pred[pred['books_id'] == book_id].index[0]
-        pred['similar'] = similarity[i]
-        #pred = pred[pred.title != books_id]
-        #pred = pred.sort_values(['similar'], ascending=False)
+    def _similarity_10(data: pd.DataFrame, book_id: str): # don't really need the data parameters-> find better way
+        pred = all_books.copy()
+        i = pred[pred['book_id'] == book_id].index[0]
+        pred['similar'] = similarity_matrix[i]
+        pred = pred[pred.book_id != book_id]
+        pred = pred.sort_values(['similar'], ascending=False)
 
-        return 0 #pred[:10]
+        return pred[:10]
