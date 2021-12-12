@@ -27,11 +27,10 @@ class BookDisplay:
         nb_of_books = data.shape[0]
 
         if nb_of_books < number_of_books:
-            print(data.shape[0])
             number_of_books = data.shape[0]
 
         data = data.sample(n=number_of_books, random_state=rstate, replace=False)
-        data = data[['title', 'image_url', 'book_id', 'average_rating']]
+        data = data[['book_id', 'title', 'image_url', 'book_id', 'average_rating']]
         data['Response'] = None
 
         return data, nb_of_books
@@ -51,34 +50,48 @@ class BookDisplay:
                 with s:
                     st.text(' ')
                     st.text(' ')
-                    books[f'{rows.title}'] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0, key={rows.title})
+                    books[rows.title] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0, key={rows.title})
                     st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-                    if books[f'{rows.title}'] == 1: st.markdown("""<div style="text-align: center"> ⭐ </div>""",
+                    if books[rows.title] == 1: st.markdown("""<div style="text-align: center"> ⭐ </div>""",
                                                                         unsafe_allow_html=True)
-                    if books[f'{rows.title}'] == 2: st.markdown(
+                    if books[rows.title] == 2: st.markdown(
                         """<div style="text-align: center"> ⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[f'{rows.title}'] == 3: st.markdown(
+                    if books[rows.title] == 3: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[f'{rows.title}'] == 4: st.markdown(
+                    if books[rows.title] == 4: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[f'{rows.title}'] == 5: st.markdown(
+                    if books[rows.title] == 5: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
         st.write(' ')
         st.write(' ')
         st.write(' ')
         st.write(pd.DataFrame(books, index=[0]))
 
-    def refresh_bouton(self): # not sure to put it there
-        return 0
-
-
-
-    def _similarity_10(data: pd.DataFrame, book_id: str): # don't really need the data parameters-> find better way
+    def _similarity_10(self, book_id: str):  # don't really need the data parameters-> find better way
         pred = all_books.copy()
+        pred['book_id'] = pred['book_id'].astype(str)
         i = pred[pred['book_id'] == book_id].index[0]
         pred['similar'] = similarity_matrix[i]
         pred = pred[pred.book_id != book_id]
         pred = pred.sort_values(['similar'], ascending=False)
 
         return pred[:10]
+
+    def recommend_books(self, rated_books: Dict): # not sure to keep it ?
+        ###### IMPORTANT ######
+        # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
+        recommended = pd.DataFrame()
+        df = all_books[['book_id', 'title', 'image_url']].copy()
+
+        rated = rated_books
+        rated = [(k, v) for k, v in rated.items() if v is not None]
+        rated = [(str(k), v) for k, v in rated if v>=3]
+
+        #for i in rated:
+            #recommended.append(_similarity_10(i[0]))
+
+        return 0
+
+
+
