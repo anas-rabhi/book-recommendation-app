@@ -102,16 +102,14 @@ def _recommend_books(rated_books: Dict, number_of_recommended):  # not sure to k
         return df[df.average_rating>4].sample(n=number_of_recommended).reset_index(drop=True)
 
     for i in rated:
-        print(rated)
         recommended = recommended.append(_similarity(i[0], df))
 
-    return recommended.sample(n=max(len(rated),number_of_recommended)).reset_index(drop=True)
+    #return recommended.sample(n=max(len(rated),number_of_recommended)).reset_index(drop=True)
+    return recommended.reset_index(drop=True)[:number_of_recommended]
 
 def _similarity(book_id: str, data: pd.DataFrame):  # don't really need the data parameters-> find better way
     pred = data.copy()
     pred['book_id'] = pred['book_id'].astype(str)
-    print(book_id)
-    print(type(pred['book_id']))
     i = pred[pred['book_id'] == book_id].index[0]
     pred['similar'] = similarity_matrix[i]
     pred = pred[pred.book_id != book_id]
