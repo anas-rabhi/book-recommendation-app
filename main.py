@@ -4,8 +4,7 @@ import pandas as pd
 from book_app import BookDisplay
 data = pd.read_csv('./data/books.csv')
 
-st.sidebar.write(
-    "Recommanded movies")
+
 
 if 'number_of_books' not in st.session_state:
     st.session_state['number_of_books'] = 5
@@ -47,3 +46,4 @@ with s:
 
 # BookDisplay.recommended_books(st.session_state['rated_books'])
 
+BookDisplay.display_books_to_recommend(st.session_state['rated_books'], number_of_recommended=10)
