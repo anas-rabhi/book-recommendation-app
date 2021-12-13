@@ -37,6 +37,7 @@ class BookDisplay:
 
     @staticmethod
     def display_books_to_rate(data: pd.DataFrame, books: Dict):
+
         for rows in data.itertuples(index=False):
             with st.container():
                 st.write(f'_________________')
@@ -50,18 +51,19 @@ class BookDisplay:
                 with s:
                     st.text(' ')
                     st.text(' ')
-                    books[rows.title] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0, key={rows.title})
+                    books[rows.book_id] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0, key={rows.book_id})
+
                     st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
-                    if books[rows.title] == 1: st.markdown("""<div style="text-align: center"> ⭐ </div>""",
+                    if books[rows.book_id] == 1: st.markdown("""<div style="text-align: center"> ⭐ </div>""",
                                                                         unsafe_allow_html=True)
-                    if books[rows.title] == 2: st.markdown(
+                    if books[rows.book_id] == 2: st.markdown(
                         """<div style="text-align: center"> ⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[rows.title] == 3: st.markdown(
+                    if books[rows.book_id] == 3: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[rows.title] == 4: st.markdown(
+                    if books[rows.book_id] == 4: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
-                    if books[rows.title] == 5: st.markdown(
+                    if books[rows.book_id] == 5: st.markdown(
                         """<div style="text-align: center"> ⭐⭐⭐⭐⭐ </div>""", unsafe_allow_html=True)
         st.write(' ')
         st.write(' ')
