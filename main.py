@@ -2,6 +2,9 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from book_app import BookDisplay
+import random
+
+
 data = pd.read_csv('./data/books.csv')
 
 
@@ -10,7 +13,7 @@ if 'number_of_books' not in st.session_state:
     st.session_state['number_of_books'] = 5
 
 if 'random_books' not in st.session_state:
-    st.session_state['random_books'] = 440
+    st.session_state['random_books'] = random.randint(1,1000)
 
 if 'rated_books' not in st.session_state:
     st.session_state['rated_books'] = {}
@@ -42,7 +45,7 @@ with f:
 with s:
     if st.button('Show another sample of books'):
         st.session_state['random_books'] += 5
-        st.session_state['number_of_books'] = 5
+        st.session_state['number_of_books'] = 5   # SHOW ANOTHER SAMPLE IS NOT WORKING THE FIRST TIME
 
 # BookDisplay.recommended_books(st.session_state['rated_books'])
 
