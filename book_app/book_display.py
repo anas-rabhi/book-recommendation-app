@@ -7,12 +7,12 @@ from typing import (Dict,
                     Callable)
 
 
-similarity_matrix = np.load('../data/similarity.npy')
-all_books = pd.read_csv('../data/books.csv')
+similarity_matrix = np.load('./data/similarity.npy')
+all_books = pd.read_csv('./data/books.csv')
 
 class BookDisplay:
     def __init__(self):
-        self._similarity(0)
+        self.var = 0
 
     @staticmethod
     def generate_books_to_rate(data: pd.DataFrame,number_of_books: int = 20, rstate: int = 44, search: str = None) -> pd.DataFrame:
@@ -68,30 +68,54 @@ class BookDisplay:
         st.write(' ')
         st.write(pd.DataFrame(books, index=[0]))
 
-    def _similarity_10(self, book_id: str):  # don't really need the data parameters-> find better way
-        pred = all_books.copy()
-        pred['book_id'] = pred['book_id'].astype(str)
-        i = pred[pred['book_id'] == book_id].index[0]
-        pred['similar'] = similarity_matrix[i]
-        pred = pred[pred.book_id != book_id]
-        pred = pred.sort_values(['similar'], ascending=False)
+    @staticmethod
+    def display_books_to_recommend(rated_books: Dict, number_of_recommended: int):
+        data = _recommend_books(rated_books, number_of_recommended)
+        if data is None:
+            return st.write('Rate some movies to get a recommendation. ')
 
-        return pred[:10]
+        st.sidebar.title('Recommended Books')
+        st.sidebar.write(f'_________________')
 
-    def recommend_books(self, rated_books: Dict): # not sure to keep it ?
-        ###### IMPORTANT ######
-        # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
-        recommended = pd.DataFrame()
-        df = all_books[['book_id', 'title', 'image_url']].copy()
+        for rows in data.itertuples(index=False):
+            st.sidebar.write(f'{rows.original_title}, rating : {rows.average_rating}')
+            st.sidebar.write(f'_________________')
+            st.sidebar.image(rows.image_url)
 
-        rated = rated_books
-        rated = [(k, v) for k, v in rated.items() if v is not None]
-        rated = [(str(k), v) for k, v in rated if v>=3]
+            st.sidebar.write(f'_________________')
 
-        #for i in rated:
-            #recommended.append(_similarity_10(i[0]))
 
-        return 0
+
+def _recommend_books(rated_books: Dict, number_of_recommended):  # not sure to keep it ?
+    ###### IMPORTANT ######
+    # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
+    recommended = pd.DataFrame()
+    df = all_books[['book_id', 'original_title', 'image_url', 'average_rating']].copy()
+
+    rated = rated_books
+    rated = [(k, v) for k, v in rated.items() if v!='Not rated']
+    rated = [(str(k), v) for k, v in rated if int(v) >= 3]
+
+    if len(rated)==0:
+        return df[df.average_rating>4].sample(n=number_of_recommended).reset_index(drop=True)
+
+    for i in rated:
+        print(rated)
+        recommended = recommended.append(_similarity(i[0], df))
+
+    return recommended.sample(n=max(len(rated),number_of_recommended)).reset_index(drop=True)
+
+def _similarity(book_id: str, data: pd.DataFrame):  # don't really need the data parameters-> find better way
+    pred = data.copy()
+    pred['book_id'] = pred['book_id'].astype(str)
+    print(book_id)
+    print(type(pred['book_id']))
+    i = pred[pred['book_id'] == book_id].index[0]
+    pred['similar'] = similarity_matrix[i]
+    pred = pred[pred.book_id != book_id]
+    pred = pred.sort_values(['similar'], ascending=False)
+
+    return pred[:10]
 
 
 
