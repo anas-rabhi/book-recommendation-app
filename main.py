@@ -25,6 +25,16 @@ search = st.text_input('Search a book by its title')
 
 
 
+f, s = st.columns(2)
+
+with f:
+    if st.button('Load more books'):
+        st.session_state['number_of_books'] += 5
+with s:
+    if st.button('Show another sample of books'):
+        st.session_state['random_books'] += 5
+        st.session_state['number_of_books'] = 5   # SHOW ANOTHER SAMPLE IS NOT WORKING THE FIRST TIME
+
 # Generate books
 books_to_display, nb = BookDisplay.generate_books_to_rate(data, number_of_books=st.session_state['number_of_books'], rstate=st.session_state['random_books'], search=search)
 
@@ -37,15 +47,6 @@ st.title(f'Books to rate')
 # Display the books
 BookDisplay.display_books_to_rate(books_to_display, st.session_state['rated_books'])
 
-f, s = st.columns(2)
-
-with f:
-    if st.button('Load more books'):
-        st.session_state['number_of_books'] += 5
-with s:
-    if st.button('Show another sample of books'):
-        st.session_state['random_books'] += 5
-        st.session_state['number_of_books'] = 5   # SHOW ANOTHER SAMPLE IS NOT WORKING THE FIRST TIME
 
 # BookDisplay.recommended_books(st.session_state['rated_books'])
 
