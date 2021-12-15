@@ -83,10 +83,13 @@ class BookDisplay:
 
             st.sidebar.write(f'_________________')
 
-    def _recommend_books(self, rated_books: Dict, number_of_recommended):  # not sure to keep it ?
+    def _recommend_books(self, rated_books: Dict, number_of_recommended: int, list_of_recommended: None):  # not sure to keep it ?
         ###### IMPORTANT ######
         # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
         recommended = pd.DataFrame()
+        if list_of_recommended is not None:
+            recommended = pd.DataFrame(list_of_recommended)
+
         df = all_books[['book_id', 'original_title', 'image_url', 'average_rating']].copy()
 
         rated = rated_books
