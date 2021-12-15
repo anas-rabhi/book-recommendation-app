@@ -19,7 +19,7 @@ if 'rated_books' not in st.session_state:
     st.session_state['rated_books'] = {}
 
 
-
+book_dis = BookDisplay()
 
 search = st.text_input('Search a book by its title')
 
@@ -45,9 +45,9 @@ st.write(f'__________')
 st.title(f'Books to rate')
 
 # Display the books
-BookDisplay.display_books_to_rate(books_to_display, st.session_state['rated_books'])
+book_dis.display_books_to_rate(books_to_display, st.session_state['rated_books'])
 
 
 # BookDisplay.recommended_books(st.session_state['rated_books'])
 
-BookDisplay.display_books_to_recommend(st.session_state['rated_books'], number_of_recommended=10)
+book_dis.display_books_to_recommend(rated_books=st.session_state['rated_books'], number_of_recommended=10)
