@@ -6,19 +6,28 @@ from typing import (Dict,
                     List,
                     Callable)
 
-
 similarity_matrix = np.load('./data/similarity.npy')
 all_books = pd.read_csv('./data/books.csv')
+
 
 class BookDisplay:
 
     @staticmethod
-    def generate_books_to_rate(data: pd.DataFrame,number_of_books: int = 20, rstate: int = 44, search: str = None) -> pd.DataFrame:
+    def generate_books_to_rate(data: pd.DataFrame, number_of_books: int = 20, rstate: int = 44,
+                               search: str = None) -> pd.DataFrame:
+        """
+
+        :param data:
+        :param number_of_books:
+        :param rstate:
+        :param search:
+        :return:
+        """
         data = data.copy()
         data = data.drop_duplicates(subset=['title'])
         if str.lower(search) is not None:
             data = data[data.title.str.lower().str.contains(search)]
-        #data.sort_values('average_rating')
+        # data.sort_values('average_rating')
 
         data = data[data.ratings_count.astype(float) > 100000]
 
@@ -35,6 +44,12 @@ class BookDisplay:
 
     @staticmethod
     def display_books_to_rate(data: pd.DataFrame, books: Dict):
+        """
+
+        :param data:
+        :param books:
+        :return:
+        """
 
         for rows in data.itertuples(index=False):
             with st.container():
@@ -49,12 +64,13 @@ class BookDisplay:
                 with s:
                     st.text(' ')
                     st.text(' ')
-                    books[rows.book_id] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0, key={rows.book_id})
+                    books[rows.book_id] = st.radio("Rate the movie", ('Not rated', 1, 2, 3, 4, 5), index=0,
+                                                   key={rows.book_id})
 
                     st.write('<style>div.row-widget.stRadio > div{flex-direction:row;}</style>', unsafe_allow_html=True)
 
                     if books[rows.book_id] == 1: st.markdown("""<div style="text-align: center"> ⭐ </div>""",
-                                                                        unsafe_allow_html=True)
+                                                             unsafe_allow_html=True)
                     if books[rows.book_id] == 2: st.markdown(
                         """<div style="text-align: center"> ⭐⭐ </div>""", unsafe_allow_html=True)
                     if books[rows.book_id] == 3: st.markdown(
@@ -69,6 +85,12 @@ class BookDisplay:
         st.write(pd.DataFrame(books, index=[0]))
 
     def display_books_to_recommend(self, rated_books: Dict, number_of_recommended: int):
+        """
+
+        :param rated_books:
+        :param number_of_recommended:
+        :return:
+        """
         data = self._recommend_books(rated_books=rated_books, number_of_recommended=number_of_recommended)
         if data is None:
             return st.write('Rate some movies to get a recommendation. ')
@@ -83,7 +105,15 @@ class BookDisplay:
 
             st.sidebar.write(f'_________________')
 
-    def _recommend_books(self, rated_books: Dict, number_of_recommended: int, list_of_recommended: None):  # not sure to keep it ?
+    def _recommend_books(self, rated_books: Dict, number_of_recommended: int,
+                         list_of_recommended: None):  # not sure to keep it ?
+        """
+
+        :param rated_books:
+        :param number_of_recommended:
+        :param list_of_recommended:
+        :return:
+        """
         ###### IMPORTANT ######
         # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
         recommended = pd.DataFrame()
@@ -111,6 +141,12 @@ class BookDisplay:
             drop=True)
 
     def _similarity(self, book_id: str, data: pd.DataFrame):  # don't really need the data parameters-> find better way
+        """
+
+        :param book_id:
+        :param data:
+        :return:
+        """
         pred = data.copy()
         pred['book_id'] = pred['book_id'].astype(str)
         i = pred[pred['book_id'] == book_id].index[0]
@@ -119,6 +155,3 @@ class BookDisplay:
         pred = pred.sort_values(['similar'], ascending=False)
 
         return pred[:10]
-
-
-
