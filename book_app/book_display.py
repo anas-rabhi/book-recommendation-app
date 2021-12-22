@@ -12,16 +12,11 @@ all_books = pd.read_csv('./data/books.csv')
 
 class BookDisplay:
 
-    @staticmethod
+    @staticmethod  ### don't keep
     def generate_books_to_rate(data: pd.DataFrame, number_of_books: int = 20, rstate: int = 44,
                                search: str = None) -> pd.DataFrame:
         """
-
-        :param data:
-        :param number_of_books:
-        :param rstate:
-        :param search:
-        :return:
+        Generate a sample of books that would be rated by the user.
         """
         data = data.copy()
         data = data.drop_duplicates(subset=['title'])
@@ -45,10 +40,7 @@ class BookDisplay:
     @staticmethod
     def display_books_to_rate(data: pd.DataFrame, books: Dict):
         """
-
-        :param data:
-        :param books:
-        :return:
+        Display the sample of books to rate.
         """
 
         for rows in data.itertuples(index=False):
@@ -86,10 +78,7 @@ class BookDisplay:
 
     def display_books_to_recommend(self, rated_books: Dict, number_of_recommended: int):
         """
-
-        :param rated_books:
-        :param number_of_recommended:
-        :return:
+        Display the recommended books.
         """
         data = self._recommend_books(rated_books=rated_books, number_of_recommended=number_of_recommended)
         if data is None:
@@ -108,11 +97,7 @@ class BookDisplay:
     def _recommend_books(self, rated_books: Dict, number_of_recommended: int,
                          list_of_recommended: None):  # not sure to keep it ?
         """
-
-        :param rated_books:
-        :param number_of_recommended:
-        :param list_of_recommended:
-        :return:
+        Generate the sample of recommended books.
         """
         ###### IMPORTANT ######
         # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
@@ -142,10 +127,7 @@ class BookDisplay:
 
     def _similarity(self, book_id: str, data: pd.DataFrame):  # don't really need the data parameters-> find better way
         """
-
-        :param book_id:
-        :param data:
-        :return:
+        Find the 10th most similar books
         """
         pred = data.copy()
         pred['book_id'] = pred['book_id'].astype(str)
