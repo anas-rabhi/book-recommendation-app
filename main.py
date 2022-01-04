@@ -25,9 +25,9 @@ if __name__ == '__main__':
 
     f, s = st.columns(2)
 
-    # with f:
-    #    if st.button('Load more books'):
-    #        st.session_state['number_of_books'] += 5
+    with f:
+        if st.button('Load more books'):
+            st.session_state['number_of_books'] += 5
     with s:
         if st.button('Show another sample of books'):
             st.session_state['random_books'] += 5
