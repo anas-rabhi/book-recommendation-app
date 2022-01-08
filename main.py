@@ -1,7 +1,9 @@
-import streamlit as st
-import pandas as pd
-from book_app import BookDisplay
 import random
+
+import pandas as pd
+import streamlit as st
+
+from book_app import BookDisplay
 
 if __name__ == '__main__':
     data = pd.read_csv('./data/books.csv')
