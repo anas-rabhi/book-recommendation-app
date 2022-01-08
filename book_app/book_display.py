@@ -1,18 +1,15 @@
-import pandas as pd
-import streamlit as st
+from typing import (Dict)
 
 import numpy as np
-from typing import (Dict,
-                    List,
-                    Callable)
+import pandas as pd
+import streamlit as st
 
 similarity_matrix = np.load('./data/similarity.npy')
 all_books = pd.read_csv('./data/books.csv')
 
 
 class BookDisplay:
-
-    @staticmethod  ### don't keep
+    @staticmethod
     def generate_books_to_rate(data: pd.DataFrame, number_of_books: int = 20, rstate: int = 44,
                                search: str = None) -> pd.DataFrame:
         """
@@ -95,14 +92,14 @@ class BookDisplay:
             st.sidebar.write(f'_________________')
 
     def _recommend_books(self, rated_books: Dict, number_of_recommended: int):
-                         #list_of_recommended: None):  # not sure to keep it ?
+        # list_of_recommended: None):  # not sure to keep it ?
         """
         Generate the sample of recommended books.
         """
         ###### IMPORTANT ######
         # not optimal, try to save a list of recommended books or return it and store it into streamlit session....
         recommended = pd.DataFrame()
-        #if list_of_recommended is not None:
+        # if list_of_recommended is not None:
         #    recommended = pd.DataFrame(list_of_recommended)
 
         df = all_books[['book_id', 'original_title', 'image_url', 'average_rating']].copy()
