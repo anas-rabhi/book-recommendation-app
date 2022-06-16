@@ -6,6 +6,8 @@ import streamlit as st
 from book_app import BookDisplay
 
 if __name__ == '__main__':
+    st.title("Recommendation App")
+    
     data = pd.read_csv('./data/books.csv')
 
     # Add number_of_books variable into session_state if does not exist (first run)
